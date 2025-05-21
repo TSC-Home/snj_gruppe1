@@ -55,7 +55,7 @@
             tipp: "Wo kann ich fahren? Zeigt an der Teke der Halle euer Gruppensymbol vor.",
             raetsel: "Um über die stadt zu sehen muss man mich erklimmen was bin ich?",
             loesung: "berg"
-        }
+        },
         {
             id: 4,
             name: "Vierte Station",
@@ -63,7 +63,7 @@
             tipp: "Finde den baum mit der nummer aus 27.540 durch 4 geteilt und schaut hinter die mauer.",
             raetsel: "Ich schmelze an heißen Tagen. Was bin ich?",
             loesung: "eis"
-        }
+        },
         {
             id: 5,
             name: "Fünfte Station",
@@ -71,7 +71,7 @@
             tipp: "Sprecht mit dem Softinis-Mitarbeiter und zeigt ihm euer gruppen symbol!",
             raetsel: "Auf mir fahren Züge was bin ich?",
             loesung: "brücke"
-        }
+        },
         {
             id: 6,
             name: "Sechste Station",
@@ -79,7 +79,7 @@
             tipp: "Ich bin ein kasten und versteck mich im grünen!",
             raetsel: "flughafen rätzel",
             loesung: "flughafen"
-        }
+        },
         {
             id: 7,
             name: "Siebte Station",
