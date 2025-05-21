@@ -35,26 +35,58 @@
         {
             id: 1,
             name: "Erste Station",
-            koordinate: { lat: 52.520008, lng: 13.404954 }, // Beispiel: Berlin Mitte
-            tipp: "Suche nach einer Parkbank mit Blick auf den Fluss.",
-            raetsel: "Ich habe Städte ohne Häuser, Wälder ohne Bäume und Flüsse ohne Wasser. Was bin ich?",
-            loesung: "landkarte"
+            koordinate: { lat: 52.57337, lng: 13.50440 }, // Beispiel: watenberg kordinaten
+            tipp: "Habt ihr euer transport mittel genau unter die lupe genommen?",
+            raetsel: "Worauf muss man im straßenverker achten?",
+            loesung: "schilder"
         },
         {
             id: 2,
             name: "Zweite Station",
-            koordinate: { lat: 52.522008, lng: 13.414954 }, // Etwas weiter nordöstlich
-            tipp: "Schau nach dem großen Baum mit der gespaltenen Rinde.",
-            raetsel: "Was hat einen Hals aber keinen Kopf?",
-            loesung: "flasche"
+            koordinate: { lat: 52.50494444, lng: 13.45319444 }, // Etwas weiter nordöstlich
+            tipp: "Ich glaube ihr solltet diese genauer betrachten!",
+            raetsel: "Skate board Rätzel",
+            loesung: "skateboard"
         },
         {
             id: 3,
-            name: "Finale",
-            koordinate: { lat: 52.523008, lng: 13.424954 }, // Noch weiter nordöstlich
-            tipp: "Unter der roten Bank findest du das letzte Rätsel.",
-            raetsel: "Ich werde größer wenn man mir etwas wegnimmt. Was bin ich?",
-            loesung: "loch"
+            name: "Dritte Station",
+            koordinate: { lat: 52.50702778, lng: 13.45413889 }, // Noch weiter nordöstlich
+            tipp: "Wo kann ich fahren? Zeigt an der Teke der Halle euer Gruppensymbol vor.",
+            raetsel: "Um über die stadt zu sehen muss man mich erklimmen was bin ich?",
+            loesung: "berg"
+        }
+        {
+            id: 4,
+            name: "Vierte Station",
+            koordinate: { lat: 52.52638889, lng: 13.43202778 }, // Noch weiter nordöstlich
+            tipp: "Finde den baum mit der nummer aus 27.540 durch 4 geteilt und schaut hinter die mauer.",
+            raetsel: "Ich schmelze an heißen Tagen. Was bin ich?",
+            loesung: "eis"
+        }
+        {
+            id: 5,
+            name: "Fünfte Station",
+            koordinate: { lat: 52.520083, lng: 13.411139 }, // Noch weiter nordöstlich
+            tipp: "Sprecht mit dem Softinis-Mitarbeiter und zeigt ihm euer gruppen symbol!",
+            raetsel: "Auf mir fahren Züge was bin ich?",
+            loesung: "brücke"
+        }
+        {
+            id: 6,
+            name: "Sechste Station",
+            koordinate: { lat: 52.4971108, lng: 13.3724448 }, // Noch weiter nordöstlich
+            tipp: "Ich bin ein kasten und versteck mich im grünen!",
+            raetsel: "flughafen rätzel",
+            loesung: "flughafen"
+        }
+        {
+            id: 7,
+            name: "Siebte Station",
+            koordinate: { lat: 52.47238889, lng: 13.3895 }, // Noch weiter nordöstlich
+            tipp: "Ich brauche ein vortbewegungs mittel.",
+            raetsel: "Findet uns am ender der Landebahn um die Jagt zu benden",
+            loesung: "bruno"
         }
     ];
 
