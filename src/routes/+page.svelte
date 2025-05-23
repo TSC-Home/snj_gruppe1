@@ -68,7 +68,7 @@
             koordinate: { lat: 52.520083, lng: 13.411139 }, // Noch weiter nordöstlich
             tipp: "Sprecht mit dem Softinis-Mitarbeiter und zeigt ihm euer gruppen symbol!",
             raetsel: "Auf mir fahren Züge was bin ich?",
-            loesung: "schiene"
+            loesung: "schienen"
         },
         {
             id: 6,
