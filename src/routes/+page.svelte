@@ -9,8 +9,6 @@
         lng: number;
     };
 
-
-
     type Station = {
         id: number;
         name: string;
@@ -113,6 +111,10 @@
     let positionsMarker: any = null;
     let radiusKreis: any = null;
     let stationsMarker: any = null;
+
+    // NEU: Variable für automatisches Zentrieren
+    let autoZentrieren: boolean = true;
+    let standortAktualisieren: boolean = false;
 
     // TEST-MODUS Variablen
     let testModus: boolean = false;
@@ -308,7 +310,7 @@
         }
     }
 
-    // Karte aktualisieren
+    // Karte aktualisieren - GEÄNDERT: nur zentrieren wenn autoZentrieren aktiv ist
     function aktualisiereKarte() {
         if (!map || !aktuellePosition) return;
 
@@ -320,15 +322,59 @@
         radiusKreis.setLatLng([aktuelleStation.koordinate.lat, aktuelleStation.koordinate.lng]);
         radiusKreis.setRadius(suchRadius);
 
-        // Karte auf beide Marker zentrieren, wenn sie nicht beide sichtbar sind
-        const bounds = map.getBounds();
-        if (!bounds.contains(positionsMarker.getLatLng()) || !bounds.contains(stationsMarker.getLatLng())) {
-            const gruppe = L.featureGroup([positionsMarker, stationsMarker]);
-            map.fitBounds(gruppe.getBounds().pad(0.3));
+        // Karte nur zentrieren wenn autoZentrieren aktiv ist oder explizit angefordert
+        if (autoZentrieren || standortAktualisieren) {
+            const bounds = map.getBounds();
+            if (!bounds.contains(positionsMarker.getLatLng()) || !bounds.contains(stationsMarker.getLatLng())) {
+                const gruppe = L.featureGroup([positionsMarker, stationsMarker]);
+                map.fitBounds(gruppe.getBounds().pad(0.3));
+            }
+            standortAktualisieren = false; // Reset nach manueller Aktualisierung
         }
     }
 
-    // Aktuelle Position aktualisieren
+    // NEU: Manuell Standort aktualisieren
+    function aktualisiereStandortManuell() {
+        if (testModus) {
+            // Im Test-Modus: Position zur Station bewegen
+            testPosition = {
+                lat: aktuelleStation.koordinate.lat + (Math.random() - 0.5) * 0.001,
+                lng: aktuelleStation.koordinate.lng + (Math.random() - 0.5) * 0.001
+            };
+            standortAktualisieren = true;
+            aktualisiereTestPosition();
+        } else if (browser && navigator.geolocation) {
+            // Echte Geolocation verwenden
+            standortAktualisieren = true;
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    console.log("Manueller Standort erhalten:", position.coords);
+                    aktualisierePosition(position);
+                },
+                (error) => {
+                    console.error("Fehler bei manueller Standortabfrage:", error);
+                    positionError = "Standort konnte nicht aktualisiert werden.";
+                },
+                { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+            );
+        }
+    }
+
+    // NEU: Karte zu aktueller Position zentrieren
+    function zentriereAufPosition() {
+        if (map && aktuellePosition) {
+            map.setView([aktuellePosition.lat, aktuellePosition.lng], 18, { animate: true });
+        }
+    }
+
+    // NEU: Karte zu Station zentrieren
+    function zentriereAufStation() {
+        if (map && aktuelleStation) {
+            map.setView([aktuelleStation.koordinate.lat, aktuelleStation.koordinate.lng], 18, { animate: true });
+        }
+    }
+
+    // Aktuelle Position aktualisieren - GEÄNDERT: autoZentrieren deaktivieren nach erstem Aufruf
     function aktualisierePosition(position: GeolocationPosition) {
         console.log("Position aktualisiert", position.coords);
         aktuellePosition = {
@@ -345,6 +391,13 @@
                 aktualisiereKarte();
             } else {
                 console.log("Karte existiert noch nicht für Update");
+            }
+
+            // Nach erstem Update automatisches Zentrieren deaktivieren
+            if (autoZentrieren && !standortAktualisieren) {
+                setTimeout(() => {
+                    autoZentrieren = false;
+                }, 2000); // 2 Sekunden warten, dann deaktivieren
             }
 
             // Debug-Info aktualisieren
@@ -431,6 +484,9 @@
                     erfolgNachricht = "";
                     tippAnzeigen = false;
                     positionGefunden = false;
+                    
+                    // Beim Wechsel zur nächsten Station automatisches Zentrieren wieder aktivieren
+                    autoZentrieren = true;
                     aktualisiereKarte();
 
                     // Speichere Fortschritt nach dem Wechsel zur nächsten Station
@@ -450,6 +506,7 @@
     // Standortnutzung starten (wird durch Benutzerklick aufgerufen)
     function starteSpiel() {
         statusNachricht = "Starte Spiel...";
+        autoZentrieren = true; // Beim Start automatisches Zentrieren aktivieren
 
         if (testModus) {
             // TEST-MODUS starten
@@ -504,7 +561,7 @@
                             { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
                         );
                     }, 500);
-   },
+                },
                 (error) => {
                     console.error("Standortfehler:", error);
                     switch(error.code) {
@@ -540,6 +597,8 @@
             // TEST-MODUS fortsetzen
             console.log("Setze im Test-Modus fort");
             spielGestartet = true;
+            speichereFortschritt();
+
             // Verzögerung hinzufügen, um sicherzustellen, dass der DOM vollständig gerendert ist
             setTimeout(() => {
                 initialisiereKarte(testPosition);
@@ -558,12 +617,13 @@
         } else if (browser && navigator.geolocation) {
             statusNachricht = "Fordere Standorterlaubnis an...";
             console.log("Fordere Standorterlaubnis an für Fortsetzung...");
-            spielGestartet = true;
             // Einmalige Position abrufen (löst die Berechtigungsabfrage aus)
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     console.log("Standort erhalten für Fortsetzung:", position.coords);
                     statusNachricht = "Standort gefunden!";
+                    spielGestartet = true;
+                    speichereFortschritt();
 
                     aktuellePosition = {
                         lat: position.coords.latitude,
@@ -613,18 +673,43 @@
 
     // Spiel neu starten
     function starteNeu() {
+        // Stoppe aktuelle Positionsverfolgung falls vorhanden
+        if (watchId !== null) {
+            navigator.geolocation.clearWatch(watchId);
+            watchId = null;
+        }
+
+        // Karte entfernen falls vorhanden
+        if (map) {
+            map.remove();
+            map = null;
+        }
+
         // Fortschritt zurücksetzen
         aktuelleStationIndex = 0;
         aktuelleStation = stationen[aktuelleStationIndex];
         geloesteListe = [];
         spielBeendet = false;
+        spielGestartet = false;
         autoZentrieren = true; // Beim Neustart automatisches Zentrieren aktivieren
+        
+        // UI-Zustand zurücksetzen
+        benutzerAntwort = "";
+        fehlerNachricht = "";
+        erfolgNachricht = "";
+        tippAnzeigen = false;
+        positionGefunden = false;
+        positionError = "";
+        aktuellePosition = null;
+        entfernung = -1;
 
         // Lösche gespeicherten Fortschritt
         loescheFortschritt();
 
-        // Starte das Spiel neu
-        starteSpiel();
+        // Kurze Verzögerung, dann Spiel neu starten
+        setTimeout(() => {
+            starteSpiel();
+        }, 100);
     }
 
     // TEST-MODUS Einstellungen aktualisieren
