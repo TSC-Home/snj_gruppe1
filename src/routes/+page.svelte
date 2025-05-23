@@ -504,7 +504,7 @@
                             { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
                         );
                     }, 500);
-                },
+   },
                 (error) => {
                     console.error("Standortfehler:", error);
                     switch(error.code) {
@@ -534,6 +534,7 @@
     // Spiel fortsetzen mit gespeichertem Fortschritt
     function setzeSpielFort() {
         statusNachricht = "Setze Spiel fort...";
+        autoZentrieren = true; // Beim Fortsetzen automatisches Zentrieren aktivieren
 
         if (testModus) {
             // TEST-MODUS fortsetzen
@@ -617,6 +618,7 @@
         aktuelleStation = stationen[aktuelleStationIndex];
         geloesteListe = [];
         spielBeendet = false;
+        autoZentrieren = true; // Beim Neustart automatisches Zentrieren aktivieren
 
         // Lösche gespeicherten Fortschritt
         loescheFortschritt();
@@ -736,6 +738,43 @@
                 <!-- Leaflet-Karte wird hier eingefügt -->
             </div>
 
+            <!-- NEU: Standort-Buttons im Uber-Stil (oben links) -->
+            <div class="absolute top-3 left-3 flex flex-col space-y-2 z-10">
+                <!-- Standort aktualisieren Button -->
+                <button
+                    on:click={aktualisiereStandortManuell}
+                    class="bg-black hover:bg-gray-800 rounded-full shadow-lg p-3 transition-colors"
+                    title="Standort aktualisieren"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </button>
+
+                <!-- Auf Position zentrieren Button -->
+                <button
+                    on:click={zentriereAufPosition}
+                    class="bg-black hover:bg-gray-800 rounded-full shadow-lg p-3 transition-colors"
+                    title="Auf meine Position zentrieren"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                </button>
+
+                <!-- Auf Station zentrieren Button -->
+                <button
+                    on:click={zentriereAufStation}
+                    class="bg-black hover:bg-gray-800 rounded-full shadow-lg p-3 transition-colors"
+                    title="Auf Ziel zentrieren"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                    </svg>
+                </button>
+            </div>
+
             <!-- Entfernungsanzeige im Uber-Stil -->
             <div class="absolute top-3 right-3 bg-black rounded-full shadow-lg px-3 py-1 text-sm font-medium z-10">
                 {#if entfernung >= 0}
@@ -840,7 +879,7 @@
 
         <!-- Debug-Panel (nur im Test-Modus) - im Uber-Stil -->
         {#if testModus}
-            <div class="absolute top-16 right-3 bg-black border border-gray-800 rounded-lg shadow-lg p-3 z-30 max-w-xs opacity-90 hover:opacity-100 transition-opacity">
+            <div class="absolute top-32 right-3 bg-black border border-gray-800 rounded-lg shadow-lg p-3 z-30 max-w-xs opacity-90 hover:opacity-100 transition-opacity">
                 <button
                         class="absolute -top-2 -right-2 bg-gray-800 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold"
                         on:click={() => document.querySelector('#debug-panel').classList.toggle('hidden')}
@@ -852,6 +891,16 @@
                     <h3 class="text-xs font-bold mb-2 text-gray-400">DEBUG TOOLS</h3>
 
                     <div class="space-y-3 text-xs">
+                        <div>
+                            <label class="mb-1 block text-gray-400">Auto-Zoom: {autoZentrieren ? 'An' : 'Aus'}</label>
+                            <button
+                                    on:click={() => autoZentrieren = !autoZentrieren}
+                                    class="w-full bg-gray-800 text-white py-1 px-2 rounded-md text-xs"
+                            >
+                                {autoZentrieren ? 'Deaktivieren' : 'Aktivieren'}
+                            </button>
+                        </div>
+
                         <div>
                             <label class="mb-1 block text-gray-400">Radius: {suchRadius}m</label>
                             <input
