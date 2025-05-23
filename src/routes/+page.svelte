@@ -35,7 +35,7 @@
             name: "Erste Station",
             koordinate: { lat: 52.57337, lng: 13.50440 }, // Beispiel: watenberg kordinaten
             tipp: "Habt ihr euer transport mittel genau unter die lupe genommen?",
-            raetsel: "Worauf muss man im straßenverker achten?",
+            raetsel: "Worauf Autofahrer im straßenverker achten?",
             loesung: "schilder"
         },
         {
@@ -68,7 +68,7 @@
             koordinate: { lat: 52.520083, lng: 13.411139 }, // Noch weiter nordöstlich
             tipp: "Sprecht mit dem Softinis-Mitarbeiter und zeigt ihm euer gruppen symbol!",
             raetsel: "Auf mir fahren Züge was bin ich?",
-            loesung: "brücke"
+            loesung: "schiene"
         },
         {
             id: 6,
@@ -85,6 +85,14 @@
             tipp: "Ich brauche ein vortbewegungs mittel.",
             raetsel: "Findet uns am ender der Landebahn um die Jagt zu benden",
             loesung: "bruno"
+        },
+{
+            id: 8,
+            name: "Achte Station",
+            koordinate: { lat: 52.50589623, lng: 13.44774266 }, // Noch weiter nordöstlich
+            tipp: "Geht zum Peter Pan!",
+            raetsel: "Was gibt es denn hier zu essen?",
+            loesung: "burger"
         }
     ];
 
