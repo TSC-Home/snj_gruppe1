@@ -33,7 +33,7 @@
         {
             id: 1,
             name: "Erste Station",
-            koordinate: { lat: 52.57337, lng: 13.50440 }, // Beispiel: watenberg kordinaten
+            koordinate: { lat: 52.50494444, lng: 13.45319444 }, // Beispiel: watenberg kordinaten
             tipp: "Habt ihr euer transport mittel genau unter die lupe genommen?",
             raetsel: "Worauf Autofahrer im straßenverker achten?",
             loesung: "schilder"
